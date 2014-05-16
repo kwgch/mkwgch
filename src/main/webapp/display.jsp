@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<meta charset="UTF-8"> 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <%@ page import="com.google.appengine.api.search.Document" %>
 <%@ page import="com.google.appengine.api.search.Field" %>
 <%@ page import="java.util.List" %>
@@ -9,10 +9,12 @@
     if (outcome == null || outcome.isEmpty()) {
       outcome = "&nbsp;";
     }
+      
       String query = (String) request.getParameter("query");
     if (query == null) {
       query = "";
     }
+    
     String limit = (String) request.getParameter("limit");
     if (limit == null || limit.isEmpty()) {
       limit = "10";
@@ -77,7 +79,7 @@
     <div style='clear: both; font-style: italic; margin-bottom: 1ex;'><%=outcome%></div>
     <form name="search" action="/search" method="get">
       <input placeholder="Search" style="width:500px;"
-      type="search" name="query" id="query" value='<%=query%>'/>
+      type="search" name="query" id="query" value='<%= query %>'/>
       <select name="limit">
         <option <%="5".equals(limit)? "selected" : ""%>>5</option>
         <option <%="10".equals(limit)? "selected" : ""%>>10</option>
@@ -137,7 +139,13 @@
             <%=doc.getOnlyField("nickname").getText()%>
           </td>
           <td>
-            <%=doc.getOnlyField("content").getText()%>
+            
+            <% String content = doc.getOnlyField("content").getText();
+               try{
+                 content = java.net.URLDecoder.decode(content, "UTF-8");
+               } catch (Exception e) {}
+            %>
+            <%=content%>
           </td>
         </tr>
         <%

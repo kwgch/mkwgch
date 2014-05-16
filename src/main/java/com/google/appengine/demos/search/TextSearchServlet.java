@@ -2,6 +2,7 @@
 
 package com.google.appengine.demos.search;
 
+import com.google.appengine.api.search.DeleteException;
 import com.google.appengine.api.search.Document;
 import com.google.appengine.api.search.Field;
 import com.google.appengine.api.search.Index;
@@ -10,15 +11,17 @@ import com.google.appengine.api.search.OperationResult;
 import com.google.appengine.api.search.Query;
 import com.google.appengine.api.search.QueryOptions;
 import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.DeleteException;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchServiceFactory;
 import com.google.appengine.api.search.StatusCode;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.demos.search.TextSearchServlet;
 
 import java.io.IOException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -30,6 +33,8 @@ import java.util.logging.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -113,6 +118,10 @@ public class TextSearchServlet extends HttpServlet {
    */
   private String add(HttpServletRequest req, User currentUser) {
     String content = req.getParameter("doc");
+    // UTF-8 encode
+    try{
+      content = URLEncoder.encode(content, "UTF-8");
+    } catch (Exception e) {}
     if (content == null || content.isEmpty()) {
       LOG.warning(VOID_ADD);
       return VOID_ADD;
@@ -168,6 +177,10 @@ public class TextSearchServlet extends HttpServlet {
     if (queryStr == null) {
       queryStr = "";
     }
+    // UTF-8 encode
+    try{
+      queryStr = URLEncoder.encode(queryStr, "UTF-8");
+    } catch (Exception e) {}
     String limitStr = req.getParameter("limit");
     int limit = 10;
     if (limitStr != null) {
@@ -204,7 +217,8 @@ public class TextSearchServlet extends HttpServlet {
         if (expressions != null) {
           for (Field field : expressions) {
             if ("content".equals(field.getName())) {
-              content = field.getHTML();
+              //content = field.getHTML();
+              content = field.getText();
               break;
             }
           }
@@ -212,6 +226,11 @@ public class TextSearchServlet extends HttpServlet {
         if (content == null) {
           content = getOnlyField(scoredDoc, "content", "");
         }
+        //decode UTF-8
+        //try{
+        //  content = URLDecoder.decode(content, "UTF-8");
+        //} catch (Exception e) {}
+        
         Document derived = Document.newBuilder()
             .setId(scoredDoc.getId())
             .addField(Field.newBuilder().setName("content").setText(content))
