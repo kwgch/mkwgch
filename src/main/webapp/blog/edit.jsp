@@ -3,26 +3,26 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="f" uri="http://www.slim3.org/functions"%>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Blog(Slim3)</title>
-<link rel="stylesheet" type="text/css" href="/css/global.css" />
-</head>
-<body>
-<ul>
+<c:import url="/layout.jsp">
+<c:param name="title" value="Blog(Slim3)"/>
+<c:param name="content">
+  <ul>
 <c:forEach var="e" items="${f:errors()}">
-<li>${f:h(e)}</li>
+<li class="bg-danger">${f:h(e)}</li>
 </c:forEach>
 </ul>
-<form action="${f:url('update')}" method="post">
+<form action="${f:url('update')}" method="post" role="form">
 <input type="hidden" ${f:hidden("key")}/>
 <input type="hidden" ${f:hidden("version")}/>
-Title<br />
-<input type="text" ${f:text("title")} class="${f:errorClass('title', 'err')}"/><br />
-Content<br />
-<textarea name="content" class="${f:errorClass('content', 'err')}">${f:h(content)}</textarea><br />
-<input type="submit" value="Update"/>
+<div class="form-group">
+    <label for="title">Title</label>
+    <input type="text" ${f:text("title")} class="form-control"/>
+  </div>
+  <div class="form-group">
+    <label for="content">Content</label>
+    <textarea name="content" class="form-control">${f:h(content)}</textarea>
+  </div>
+<input type="submit" value="Update" class="btn btn-default"/>
 </form>
-</body>
-</html>
+</c:param>
+</c:import>

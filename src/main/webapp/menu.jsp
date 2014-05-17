@@ -1,8 +1,9 @@
 <%@page pageEncoding="UTF-8" isELIgnored="false"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="f" uri="http://www.slim3.org/functions"%>
-<div id="menu">
-<ul>
+
+<div id="menu" class="col-sm-3 col-md-2 sidebar">
+<ul class="nav nav-sidebar">
 <li><a href="${f:url('/blog/')}">CRUD</a></li>
 <li><a href="${f:url('/checkbox/')}">Checkbox</a></li>
 <li><a href="${f:url('/multibox/')}">Multibox</a></li>

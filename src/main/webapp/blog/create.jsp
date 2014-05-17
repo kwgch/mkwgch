@@ -3,19 +3,21 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@taglib prefix="f" uri="http://www.slim3.org/functions"%>
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Blog(Slim3)</title>
-<link rel="stylesheet" type="text/css" href="/css/global.css" />
-</head>
-<body>
-<form action="${f:url('insert')}" method="post">
-Title<br />
-<input type="text" ${f:text("title")} class="${f:errorClass('title', 'err')}"/>${f:h(errors.title)}<br />
-Content<br />
-<textarea name="content" class="${f:errorClass('content', 'err')}">${f:h(content)}</textarea>${f:h(errors.content)}<br />
-<input type="submit" value="Insert"/>
+<c:import url="/layout.jsp">
+<c:param name="title" value="Blog(Slim3)"/>
+<c:param name="content">
+<form action="${f:url('insert')}" method="post" role="form">
+  <div class="form-group ${f:errorClass('title', 'has-error')}">
+    <label for="title">Title</label>
+    <input type="text" ${f:text("title")} class="form-control"/>
+    <span class="${f:errorClass('title', 'bg-danger')}">${f:h(errors.title)}</span>
+  </div>
+  <div class="form-group ${f:errorClass('content', 'has-error')}">
+    <label for="content">Content</label>
+    <textarea name="content" class="form-control ${f:errorClass('content', 'err')}">${f:h(content)}</textarea>
+    <span class="${f:errorClass('title', 'bg-danger')}">${f:h(errors.content)}</span>
+  </div>
+  <input type="submit" value="Insert" class="btn btn-default"/>
 </form>
-</body>
-</html>
+</c:param>
+</c:import>
