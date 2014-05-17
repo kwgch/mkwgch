@@ -1,4 +1,1 @@
-mkwgch
-======
-
-gae sample text search app
+すくすくスクラム広島用
